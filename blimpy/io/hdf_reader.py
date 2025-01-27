@@ -16,14 +16,16 @@ def oops(msg):
 
 def examine_h5(h5):
     """ Examine an HDF5 file for missing/corrupted components. """
-    if "CLASS" in h5.attrs:
-        classstr = h5.attrs["CLASS"]
+    print("in edited h5_attrs")
+    h5_attrs = h5.attrs
+    if "CLASS" in h5_attrs:
+        classstr = h5_attrs["CLASS"]
     else:
         oops("examine_h5: HDF5 CLASS attribute missing")
     if not classstr in ["FILTERBANK", b"FILTERBANK"]:
         oops("examine_h5: Expected HDF5 CLASS attribute to be 'FILTERBANK' but saw '{}'".format(classstr))
-    if "VERSION" in h5.attrs:
-        verblob = h5.attrs["VERSION"]
+    if "VERSION" in h5_attrs:
+        verblob = h5_attrs["VERSION"]
     else:
         oops("examine_h5: HDF5 VERSION attribute missing")
     if type(verblob) == str:
