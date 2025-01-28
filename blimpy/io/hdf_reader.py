@@ -16,7 +16,6 @@ def oops(msg):
 
 def examine_h5(h5):
     """ Examine an HDF5 file for missing/corrupted components. """
-    print("in edited h5_attrs")
     h5_attrs = h5.attrs
     if "CLASS" in h5_attrs:
         classstr = h5_attrs["CLASS"]
@@ -176,8 +175,8 @@ class H5Reader(Reader):
 
         return blob_start
 
-    def read_data(self, f_start=None, f_stop=None,t_start=None, t_stop=None):
-        """ Read data
+    def read_data(self, f_start=None, f_stop=None,t_start=None, t_stop=None, sequential=False):
+        """ Read data.
         """
 
         self._setup_selection_range(f_start=f_start, f_stop=f_stop, t_start=t_start, t_stop=t_stop)
@@ -193,7 +192,18 @@ class H5Reader(Reader):
         #Update frequencies ranges from channel number.
         self._setup_freqs()
 
-        self.data = self.h5["data"][self.t_start:self.t_stop,:,self.chan_start_idx:self.chan_stop_idx]
+        # Can prefetch b/c frequency ranges are accessed sequentially)
+        # = direct reading into pre-allocated array = more efficient for sequential acccesses such as going through hits.
+        if sequential:
+            # preallocate array for direct reading
+            selection_shape = (self.t_stop - self.t_start, self.h5.shape[1], self.chan_stop_idx - self.chan_start_idx)
+            # avoids creating multiple intermediate arrays and speeds up reading.
+            self.data = np.empty(selection_shape, dtype=self._d_type) 
+            self.h5["data"].read_direct(self.data,
+                source_sel=np.s_[self.t_start:self.t_stop, :, self.chan_start_idx:self.chan_stop_idx]
+            )
+        else:
+            self.data = self.h5["data"][self.t_start:self.t_stop,:,self.chan_start_idx:self.chan_stop_idx]    
 
     def read_blob(self,blob_dim,n_blob=0):
         """Read blob from a selection.
