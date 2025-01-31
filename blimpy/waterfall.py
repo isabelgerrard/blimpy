@@ -375,8 +375,11 @@ class Waterfall():
             f_stop = self.freqs[-1]
 
         try:
-            i0 = np.argmin(np.abs(self.freqs - f_start))
-            i1 = np.argmin(np.abs(self.freqs - f_stop))
+            # avoids unnecessary full array scans. searchsorted finds the appropriate insertion
+            # i0 = np.argmin(np.abs(self.freqs - f_start))
+            # i1 = np.argmin(np.abs(self.freqs - f_stop))
+            i0 = np.searchsorted(self.freqs, f_start)  # Use searchsorted for direct indexing
+            i1 = np.searchsorted(self.freqs, f_stop)
 
             if i0 < i1:
                 plot_f    = self.freqs[i0:i1 + 1]
