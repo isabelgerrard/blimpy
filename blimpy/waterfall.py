@@ -154,6 +154,7 @@ class Waterfall():
             header_dict (dict): *NOT CURRENTLY SUPPORTED*
             data_array (np.array): *NOT CURRENTLY SUPPORTED*
         """
+        print("I AM IN THE EDITED VERSION OF BLIMPY")
 
         if (header_dict is not None) or (data_array is not None):
             self._init_alternate(header_dict, data_array, filename=filename)
@@ -376,10 +377,10 @@ class Waterfall():
 
         try:
             # avoids unnecessary full array scans. searchsorted finds the appropriate insertion
-            # i0 = np.argmin(np.abs(self.freqs - f_start))
-            # i1 = np.argmin(np.abs(self.freqs - f_stop))
-            i0 = np.searchsorted(self.freqs, f_start)  # Use searchsorted for direct indexing
-            i1 = np.searchsorted(self.freqs, f_stop)
+            i0 = np.argmin(np.abs(self.freqs - f_start))
+            i1 = np.argmin(np.abs(self.freqs - f_stop))
+            # i0 = np.searchsorted(self.freqs, f_start)  # Use searchsorted for direct indexing
+            # i1 = np.searchsorted(self.freqs, f_stop)
 
             if i0 < i1:
                 plot_f    = self.freqs[i0:i1 + 1]
