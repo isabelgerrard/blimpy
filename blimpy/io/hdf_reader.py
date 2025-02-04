@@ -35,14 +35,15 @@ def examine_h5(h5):
         oops("examine_h5: HDF5 VERSION attribute is neither str nor bytes, saw {}".format(verblob))
     if not "data" in h5:
         oops("examine_h5: HDF5 data matrix missing")
-    if h5["data"].ndim != 3:
+    h5_data = h5["data"]
+    if h5_data.ndim != 3:
         oops("examine_h5: Expected HDF5 data.ndim to be 3 but saw '{}'".format(h5["data"].ndim))
     try:
-        xx = h5["data"][2][0][0]
+        xx = h5_data[2][0][0]
     except:
         oops("examine_h5: HDF5 Time-dimension data corruption")
     try:
-        xx = h5["data"][0][0][2]
+        xx = h5_data[0][0][2]
     except OSError:
         oops("examine_h5: HDF5 Frequency-dimension data corruption")
 
