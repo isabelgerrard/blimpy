@@ -396,6 +396,8 @@ class Waterfall():
             # i1 = np.argmin(np.abs(self.freqs - f_stop))
             # in a sorted array, with a time complexity of O(log n), where n is the length of the array.
             # self.freqs is always sorted 
+            # abs and subtract finds the closest value but still want binary search time 
+            print("Running searchsorted")
             if self.header['foff'] < 0:
                 # Descending order: negate for binary search
                 i0 = np.searchsorted(-self.freqs, -f_start, side='left')
@@ -405,6 +407,12 @@ class Waterfall():
                 i0 = np.searchsorted(self.freqs, f_start, side='left')
                 i1 = np.searchsorted(self.freqs, f_stop, side='right') - 1
             
+            # Adjust to find the closest values
+            if i0 > 0 and np.abs(self.freqs[i0] - f_start) > np.abs(self.freqs[i0 - 1] - f_start):
+                i0 -= 1
+            if i1 < len(self.freqs) - 1 and np.abs(self.freqs[i1] - f_stop) > np.abs(self.freqs[i1 + 1] - f_stop):
+                i1 += 1
+
             if i0 < i1:
                 plot_f    = self.freqs[i0:i1 + 1]
                 plot_data = np.squeeze(self.data[t_start:t_stop, if_id, i0:i1 + 1])
