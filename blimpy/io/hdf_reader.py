@@ -16,24 +16,24 @@ def oops(msg):
 
 def examine_h5(h5):
     """ Examine an HDF5 file for missing/corrupted components. """
-    # h5_attrs = h5.attrs
-    # if "CLASS" in h5_attrs:
-    #     classstr = h5_attrs["CLASS"]
-    # else:
-    #     oops("examine_h5: HDF5 CLASS attribute missing")
-    # if not classstr in ["FILTERBANK", b"FILTERBANK"]:
-    #     oops("examine_h5: Expected HDF5 CLASS attribute to be 'FILTERBANK' but saw '{}'".format(classstr))
-    # if "VERSION" in h5_attrs:
-    #     verblob = h5_attrs["VERSION"]
-    print("in not edited version of blimpy")
-    if "CLASS" in h5.attrs:
-        classstr = h5.attrs["CLASS"]
+    h5_attrs = h5.attrs
+    if "CLASS" in h5_attrs:
+        classstr = h5_attrs["CLASS"]
     else:
         oops("examine_h5: HDF5 CLASS attribute missing")
     if not classstr in ["FILTERBANK", b"FILTERBANK"]:
         oops("examine_h5: Expected HDF5 CLASS attribute to be 'FILTERBANK' but saw '{}'".format(classstr))
-    if "VERSION" in h5.attrs:
-        verblob = h5.attrs["VERSION"]
+    if "VERSION" in h5_attrs:
+        verblob = h5_attrs["VERSION"]
+    # print("in not edited version of blimpy")
+    # if "CLASS" in h5.attrs:
+    #     classstr = h5.attrs["CLASS"]
+    # else:
+    #     oops("examine_h5: HDF5 CLASS attribute missing")
+    # if not classstr in ["FILTERBANK", b"FILTERBANK"]:
+    #     oops("examine_h5: Expected HDF5 CLASS attribute to be 'FILTERBANK' but saw '{}'".format(classstr))
+    # if "VERSION" in h5.attrs:
+    #     verblob = h5.attrs["VERSION"]
     else:
         oops("examine_h5: HDF5 VERSION attribute missing")
     if type(verblob) == str:
