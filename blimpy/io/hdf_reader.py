@@ -25,7 +25,6 @@ def examine_h5(h5):
     #     oops("examine_h5: Expected HDF5 CLASS attribute to be 'FILTERBANK' but saw '{}'".format(classstr))
     # if "VERSION" in h5_attrs:
     #     verblob = h5_attrs["VERSION"]
-    print("in not edited version of blimpy")
     if "CLASS" in h5.attrs:
         classstr = h5.attrs["CLASS"]
     else:
