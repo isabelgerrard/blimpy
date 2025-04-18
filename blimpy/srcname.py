@@ -61,14 +61,15 @@ def examine(filepath):
 
     """
     h5 = h5py.File(filepath, mode="r")
-    if "CLASS" in h5.attrs:
-        classstr = h5.attrs["CLASS"]
+    h5_attrs = dict(h5.attrs)
+    if "CLASS" in h5_attrs:
+        classstr = h5_attrs["CLASS"]
     else:
         oops("CLASS attribute missing")
     if classstr != "FILTERBANK":
         oops("Expected CLASS attribute to be 'FILTERBANK' but saw '{}'".format(classstr))
-    if "VERSION" in h5.attrs:
-        versionstr = h5.attrs["VERSION"]
+    if "VERSION" in h5_attrs:
+        versionstr = h5_attrs["VERSION"]
     else:
         oops("VERSION attribute missing")
     header = read_header(h5)
