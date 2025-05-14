@@ -231,17 +231,18 @@ class Reader(object):
 
     def populate_freqs(self):
         """
-         Populate frequency axis
+         Populate frequency axis.
+         Always sorted but acending vs descending order based on `foff` sign.   
         """
 
         if self.header['foff'] < 0:
-            f0 = self.f_end
+            f0 = self.f_end # descending order
         else:
-            f0 = self.f_begin
+            f0 = self.f_begin # ascending order
 
         self._setup_chans()
 
-        #create freq array
+        # create freq array
         i_vals = np.arange(self.chan_start_idx, self.chan_stop_idx)
         freqs = self.header['foff'] * i_vals + f0
 

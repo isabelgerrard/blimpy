@@ -374,13 +374,11 @@ class Waterfall():
             f_stop = self.freqs[-1]
 
         try:
-            ## avoids unnecessary full array scans. searchsorted finds the appropriate insertion
-            ## time complexity of O(n)
-            ## don't need to sort because self.freqs is already sorted from ...
-            # TODO find where freqs already sorted
+            ## don't need to sort because self.freqs is already sorted from `blimpy.io.base_reader.populate_freqs`
             i0 = np.argmin(np.abs(self.freqs - f_start))
             i1 = np.argmin(np.abs(self.freqs - f_stop))
 
+            ## no.abs and i0 < i1 block both account for self.freqs sorted but in ascending OR descending order
             if i0 < i1:
                 plot_f    = self.freqs[i0:i1 + 1]
                 plot_data = np.squeeze(self.data[t_start:t_stop, if_id, i0:i1 + 1])
