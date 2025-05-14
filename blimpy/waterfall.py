@@ -154,7 +154,6 @@ class Waterfall():
             header_dict (dict): *NOT CURRENTLY SUPPORTED*
             data_array (np.array): *NOT CURRENTLY SUPPORTED*
         """
-        print("I AM IN THE EDITED VERSION OF BLIMPY")
 
         if (header_dict is not None) or (data_array is not None):
             self._init_alternate(header_dict, data_array, filename=filename)
@@ -192,17 +191,6 @@ class Waterfall():
         self.plot_time_series      = six.create_bound_method(plot_time_series, self)
         self.plot_all              = six.create_bound_method(plot_all, self)
         self.plot_spectrum_min_max = six.create_bound_method(plot_spectrum_min_max, self)
-
-        # filewrapper.open_file handles setting f_end and f_begin and t_start and t_end
-        # populate frequencies and sort only once for faster search 
-        # try:
-        #     self.freqs = self.container.populate_freqs()
-        # except Exception as ex:
-        #     raise Exception("Waterfall.__init__: Cannot allocate frequency array") from ex
-        # try:
-        #     self.timestamps = self.container.populate_timestamps()
-        # except Exception as ex:
-        #     raise Exception("Waterfall.grab_data: Cannot allocate timestamps array") from ex
 
     def __load_data(self):
         """ Helper for loading data from a container. Should not be called manually. """
@@ -371,15 +359,11 @@ class Waterfall():
             raise Exception("Waterfall.grab_data: Large data array was not loaded!  Try instantiating Waterfall with max_load.")
 
         try:
-            # self.freqs is precalculated and always sorted 
-            # avoid calling this every time grab_data - TODO maybe not necessary 
-            # if self.freqs is None:
             self.freqs = self.container.populate_freqs()
         except Exception as ex:
             raise Exception("Waterfall.grab_data: Cannot allocate frequency array") from ex
 
         try:
-            # if self.timestamps is None:
             self.timestamps = self.container.populate_timestamps()
         except Exception as ex:
             raise Exception("Waterfall.grab_data: Cannot allocate timestamps array") from ex
@@ -390,28 +374,10 @@ class Waterfall():
             f_stop = self.freqs[-1]
 
         try:
-            # # avoids unnecessary full array scans. searchsorted finds the appropriate insertion
-            # # time complexity of O(n)
+            ## avoids unnecessary full array scans. searchsorted finds the appropriate insertion
+            ## time complexity of O(n)
             i0 = np.argmin(np.abs(self.freqs - f_start))
             i1 = np.argmin(np.abs(self.freqs - f_stop))
-            # in a sorted array, with a time complexity of O(log n), where n is the length of the array.
-            # self.freqs is always sorted 
-            # abs and subtract finds the closest value but still want binary search time 
-            # print("Running searchsorted")
-            # if self.header['foff'] < 0:
-            #     # Descending order: negate for binary search
-            #     i0 = np.searchsorted(-self.freqs, -f_start, side='left')
-            #     i1 = np.searchsorted(-self.freqs, -f_stop, side='right') - 1
-            # else:
-            #     # Ascending order: standard binary search
-            #     i0 = np.searchsorted(self.freqs, f_start, side='left')
-            #     i1 = np.searchsorted(self.freqs, f_stop, side='right') - 1
-            
-            # # Adjust to find the closest values
-            # if i0 > 0 and np.abs(self.freqs[i0] - f_start) > np.abs(self.freqs[i0 - 1] - f_start):
-            #     i0 -= 1
-            # if i1 < len(self.freqs) - 1 and np.abs(self.freqs[i1] - f_stop) > np.abs(self.freqs[i1 + 1] - f_stop):
-            #     i1 += 1
 
             if i0 < i1:
                 plot_f    = self.freqs[i0:i1 + 1]
