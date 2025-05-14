@@ -376,6 +376,8 @@ class Waterfall():
         try:
             ## avoids unnecessary full array scans. searchsorted finds the appropriate insertion
             ## time complexity of O(n)
+            ## don't need to sort because self.freqs is already sorted from ...
+            # TODO find where freqs already sorted
             i0 = np.argmin(np.abs(self.freqs - f_start))
             i1 = np.argmin(np.abs(self.freqs - f_stop))
 
