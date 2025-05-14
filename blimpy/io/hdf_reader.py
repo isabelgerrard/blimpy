@@ -16,7 +16,7 @@ def oops(msg):
 
 def examine_h5(h5):
     """ Examine an HDF5 file for missing/corrupted components. """
-    h5_attrs = h5.attrs
+    h5_attrs = dict(h5.attrs)
     if "CLASS" in h5_attrs:
         classstr = h5_attrs["CLASS"]
     else:

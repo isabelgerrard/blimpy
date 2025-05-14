@@ -192,7 +192,6 @@ class Waterfall():
         self.plot_all              = six.create_bound_method(plot_all, self)
         self.plot_spectrum_min_max = six.create_bound_method(plot_spectrum_min_max, self)
 
-
     def __load_data(self):
         """ Helper for loading data from a container. Should not be called manually. """
 
@@ -375,11 +374,12 @@ class Waterfall():
             f_stop = self.freqs[-1]
 
         try:
-            # avoids unnecessary full array scans. searchsorted finds the appropriate insertion
-            # i0 = np.argmin(np.abs(self.freqs - f_start))
-            # i1 = np.argmin(np.abs(self.freqs - f_stop))
-            i0 = np.searchsorted(self.freqs, f_start)  # Use searchsorted for direct indexing
-            i1 = np.searchsorted(self.freqs, f_stop)
+            ## avoids unnecessary full array scans. searchsorted finds the appropriate insertion
+            ## time complexity of O(n)
+            ## don't need to sort because self.freqs is already sorted from ...
+            # TODO find where freqs already sorted
+            i0 = np.argmin(np.abs(self.freqs - f_start))
+            i1 = np.argmin(np.abs(self.freqs - f_stop))
 
             if i0 < i1:
                 plot_f    = self.freqs[i0:i1 + 1]
